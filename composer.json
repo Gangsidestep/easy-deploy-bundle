@@ -1,5 +1,5 @@
 {
-    "name": "Gangsidestep/easy-deploy-bundle",
+    "name": "gangsidestep/easy-deploy-bundle",
     "type": "symfony-bundle",
     "description": "The easiest way to deploy Symfony applications",
     "keywords": ["deploy", "deployment", "deployer"],
