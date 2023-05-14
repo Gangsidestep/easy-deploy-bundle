@@ -62,7 +62,9 @@ class TaskRunner
             $envVarsAsString = http_build_query($envVars, '', ' ');
             // the ';' after the env vars makes them available to all commands, not only the first one
             // parenthesis create a sub-shell so the env vars don't affect to the parent shell
-            $shellCommand = sprintf('(export %s; %s)', $envVarsAsString, $shellCommand);
+            $winOrnot= $this->isWindows() ? 'set' : 'export';
+            // 'export' command is valid only for unix shells. In Windows - use 'set' instead
+            $shellCommand = sprintf('(%s %s; %s)',$winOrnot, $envVarsAsString, $shellCommand);
         }
 
         $this->logger->log(sprintf('[<server>%s</>] Executing command: <command>%s</>', $server, $shellCommand));
