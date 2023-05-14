@@ -28,6 +28,10 @@ matrix:
       env:
         - SYMFONY_VERSION="5.0.*"
         - CHECK_PHP_SYNTAX="yes"
+    - php: 8.2
+      env:
+        - SYMFONY_VERSION="6.2.*"
+        - CHECK_PHP_SYNTAX="yes"
   allow_failures:
     - php: nightly
 
