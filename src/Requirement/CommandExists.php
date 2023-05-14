@@ -30,7 +30,14 @@ class CommandExists extends AbstractRequirement
 
     public function getChecker(): Task
     {
-        $shellCommand = sprintf('%s %s', $this->isWindows() ? 'where' : 'which', $this->commandName);
+        if($this->commandName==" /usr/bin/composer")
+        {
+            $shellCommand = sprintf('%s %s', 'which', $this->commandName);
+        }
+        else
+        {
+            $shellCommand = sprintf('%s %s', $this->isWindows() ? 'where' : 'which', $this->commandName);
+        }
 
         return new Task($this->getServers(), $shellCommand);
     }
