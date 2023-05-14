@@ -22,8 +22,8 @@ use EasyCorp\Bundle\EasyDeployBundle\Task\TaskCompleted;
 
 abstract class DefaultDeployer extends AbstractDeployer
 {
-    private $remoteProjectDirHasBeenCreated = false;
-    private $remoteSymLinkHasBeenCreated = false;
+    private bool $remoteProjectDirHasBeenCreated = false;
+    private bool $remoteSymLinkHasBeenCreated = false;
 
     public function getConfigBuilder(): DefaultConfiguration
     {
@@ -232,7 +232,8 @@ abstract class DefaultDeployer extends AbstractDeployer
         $this->runRemote('mkdir -p {{ deploy_dir }} && mkdir -p {{ deploy_dir }}/releases && mkdir -p {{ deploy_dir }}/shared');
 
         /** @var TaskCompleted[] $results */
-        $results = $this->runRemote('export _release_path="{{ deploy_dir }}/releases/$(date +%Y%m%d%H%M%S)" && mkdir -p $_release_path && echo $_release_path');
+        $insertDate=date("YmdHis");
+        $results = $this->runRemote('export _release_path={{ deploy_dir }}/releases/'.$insertDate.' && mkdir -p $_release_path && echo $_release_path');
         foreach ($results as $result) {
             $remoteProjectDir = $this->getContext()->isDryRun() ? '(the remote project_dir)' : $result->getTrimmedOutput();
             $result->getServer()->set(Property::project_dir, $remoteProjectDir);
@@ -290,7 +291,7 @@ abstract class DefaultDeployer extends AbstractDeployer
     {
         $this->log('<h2>Creating symlinks for shared files</>');
         foreach ($this->getConfig(Option::sharedFiles) as $sharedFile) {
-            $sharedFileParentDir = dirname($sharedFile);
+            $sharedFileParentDir = dirname((string) $sharedFile);
             $this->runRemote(sprintf('mkdir -p {{ deploy_dir }}/shared/%s', $sharedFileParentDir));
             $this->runRemote(sprintf('touch {{ deploy_dir }}/shared/%s', $sharedFile));
             $this->runRemote(sprintf('ln -nfs {{ deploy_dir }}/shared/%s {{ project_dir }}/%s', $sharedFile, $sharedFile));
@@ -379,9 +380,7 @@ abstract class DefaultDeployer extends AbstractDeployer
     {
         $this->log('<h2>Clearing controllers</>');
         foreach ($this->getServers()->findByRoles([Server::ROLE_APP]) as $server) {
-            $absolutePaths = array_map(function ($relativePath) use ($server) {
-                return $server->resolveProperties(sprintf('{{ project_dir }}/%s', $relativePath));
-            }, $this->getConfig(Option::controllersToRemove));
+            $absolutePaths = array_map(fn($relativePath) => $server->resolveProperties(sprintf('{{ project_dir }}/%s', $relativePath)), $this->getConfig(Option::controllersToRemove));
 
             $this->safeDelete($server, $absolutePaths);
         }
@@ -427,7 +426,7 @@ abstract class DefaultDeployer extends AbstractDeployer
     private function deleteOldReleases(Server $server, array $releaseDirs): void
     {
         foreach ($releaseDirs as $releaseDir) {
-            if (!preg_match('/\d{14}/', $releaseDir)) {
+            if (!preg_match('/\d{14}/', (string) $releaseDir)) {
                 $this->log(sprintf('[<server>%s</>] Skipping cleanup of old releases; unexpected "%s" directory found (all directory names should be timestamps)', $server, $releaseDir));
 
                 return;
@@ -441,9 +440,7 @@ abstract class DefaultDeployer extends AbstractDeployer
         }
 
         $relativeDirsToRemove = array_slice($releaseDirs, 0, -$this->getConfig(Option::keepReleases));
-        $absoluteDirsToRemove = array_map(function ($v) {
-            return sprintf('%s/releases/%s', $this->getConfig(Option::deployDir), $v);
-        }, $relativeDirsToRemove);
+        $absoluteDirsToRemove = array_map(fn($v) => sprintf('%s/releases/%s', $this->getConfig(Option::deployDir), $v), $relativeDirsToRemove);
 
         // the command must be run only on one server because the timestamps are
         // different for all servers, even when they belong to the same deploy and
