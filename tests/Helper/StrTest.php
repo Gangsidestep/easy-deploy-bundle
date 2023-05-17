@@ -58,7 +58,7 @@ TABLE;
         $this->assertSame($result, Str::formatAsTable($values));
     }
 
-    public function startsWithProvider()
+    public function startsWithProvider(): \Generator
     {
         yield ['', '', false];
         yield ['abc', '', false];
@@ -71,7 +71,7 @@ TABLE;
         yield ['<h1>a</> bc', 'a', false];
     }
 
-    public function endsWithProvider()
+    public function endsWithProvider(): \Generator
     {
         yield ['', '', true];
         yield ['abc', '', false];
@@ -84,7 +84,7 @@ TABLE;
         yield ['ab <h1>c</>', 'c', false];
     }
 
-    public function containsProvider()
+    public function containsProvider(): \Generator
     {
         yield ['', '', false];
         yield ['abc', '', false];
@@ -102,7 +102,7 @@ TABLE;
         yield ['ab <h1>c</>', 'ab c', false];
     }
 
-    public function prefixProvider()
+    public function prefixProvider(): \Generator
     {
         yield ['', '', ''];
         yield ['aaa', 'xxx', 'xxxaaa'];
@@ -110,7 +110,7 @@ TABLE;
         yield [['aaa', 'bbb', 'ccc'], 'xxx', "xxxaaa\nxxxbbb\nxxxccc"];
     }
 
-    public function stringifyProvider()
+    public function stringifyProvider(): \Generator
     {
         yield ['', ''];
         yield [fopen('php://memory', 'r+'), 'PHP Resource'];
@@ -121,7 +121,7 @@ TABLE;
         yield [['a' => 'aaa', 'b' => '3.14', 'c' => ['a', 'b']], '{"a":"aaa","b":"3.14","c":["a","b"]}'];
         yield [new class() {
             public $a = 'aaa';
-            private $b = 'bbb';
+            private string $b = 'bbb';
         }, '{"a":"aaa"}'];
         yield [new class() {
             public function __toString()

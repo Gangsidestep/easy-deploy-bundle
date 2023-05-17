@@ -39,11 +39,9 @@ class Str
 
     public static function prefix($text, string $prefix): string
     {
-        $text = is_array($text) ? $text : explode(PHP_EOL, $text);
+        $text = is_array($text) ? $text : explode(PHP_EOL, (string) $text);
 
-        return implode(PHP_EOL, array_map(function ($line) use ($prefix) {
-            return $prefix.$line;
-        }, $text));
+        return implode(PHP_EOL, array_map(fn($line) => $prefix.$line, $text));
     }
 
     public static function stringify($value): string

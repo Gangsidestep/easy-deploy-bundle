@@ -24,16 +24,12 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class DeployCommand extends Command
 {
-    private $fileLocator;
     private $projectDir;
-    private $logDir;
     private $configFilePath;
 
-    public function __construct(FileLocator $fileLocator, string $projectDir, string $logDir)
+    public function __construct(private readonly FileLocator $fileLocator, string $projectDir, private readonly string $logDir)
     {
-        $this->fileLocator = $fileLocator;
         $this->projectDir = realpath($projectDir);
-        $this->logDir = $logDir;
 
         parent::__construct();
     }

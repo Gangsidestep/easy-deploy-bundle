@@ -24,7 +24,7 @@ abstract class DefaultDeployer extends AbstractDeployer
 {
     private bool $remoteProjectDirHasBeenCreated = false;
     private bool $remoteSymLinkHasBeenCreated = false;
-
+    
     public function getConfigBuilder(): DefaultConfiguration
     {
         return new DefaultConfiguration($this->getContext()->getLocalProjectRootDir());
@@ -231,9 +231,7 @@ abstract class DefaultDeployer extends AbstractDeployer
         $this->log('<h2>Creating the remote directory layout</>');
         $this->runRemote('mkdir -p {{ deploy_dir }} && mkdir -p {{ deploy_dir }}/releases && mkdir -p {{ deploy_dir }}/shared');
 
-        /** @var TaskCompleted[] $results */
-        $insertDate=date("YmdHis");
-        $results = $this->runRemote('export _release_path={{ deploy_dir }}/releases/'.$insertDate.' && mkdir -p $_release_path && echo $_release_path');
+        $results = $this->runRemote('export _release_path={{ deploy_dir }}/releases/'.$this->release_folder.' && mkdir -p $_release_path && echo $_release_path');
         foreach ($results as $result) {
             $remoteProjectDir = $this->getContext()->isDryRun() ? '(the remote project_dir)' : $result->getTrimmedOutput();
             $result->getServer()->set(Property::project_dir, $remoteProjectDir);

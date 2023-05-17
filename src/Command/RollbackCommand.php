@@ -21,15 +21,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RollbackCommand extends Command
 {
-    private $projectDir;
-    private $logDir;
     private $configFilePath;
 
-    public function __construct(string $projectDir, string $logDir)
+    public function __construct(private readonly string $projectDir, private readonly string $logDir)
     {
-        $this->projectDir = $projectDir;
-        $this->logDir = $logDir;
-
         parent::__construct();
     }
 

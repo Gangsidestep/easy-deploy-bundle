@@ -15,12 +15,9 @@ use EasyCorp\Bundle\EasyDeployBundle\Task\Task;
 
 class CommandExists extends AbstractRequirement
 {
-    private $commandName;
-
-    public function __construct(array $servers, string $commandName)
+    public function __construct(array $servers, private readonly string $commandName)
     {
         parent::__construct($servers);
-        $this->commandName = $commandName;
     }
 
     public function getMessage(): string
@@ -30,6 +27,7 @@ class CommandExists extends AbstractRequirement
 
     public function getChecker(): Task
     {
+        // todo check for other routes and/or use Key not value
         if($this->commandName==" /usr/bin/composer")
         {
             $shellCommand = sprintf('%s %s', 'which', $this->commandName);

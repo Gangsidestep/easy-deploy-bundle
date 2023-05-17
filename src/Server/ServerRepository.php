@@ -15,10 +15,10 @@ namespace EasyCorp\Bundle\EasyDeployBundle\Server;
  * It implements the "Repository" pattern to store the servers involved in the
  * deployment and provide some helper methods to find and filter those servers.
  */
-class ServerRepository
+class ServerRepository implements \Stringable
 {
     /** @var Server[] $servers */
-    private $servers = [];
+    private array $servers = [];
 
     public function __toString(): string
     {
@@ -40,8 +40,6 @@ class ServerRepository
      */
     public function findByRoles(array $roles): array
     {
-        return array_filter($this->servers, function (Server $server) use ($roles) {
-            return !empty(array_intersect($roles, $server->getRoles()));
-        });
+        return array_filter($this->servers, fn(Server $server) => !empty(array_intersect($roles, $server->getRoles())));
     }
 }

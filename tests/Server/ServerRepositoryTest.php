@@ -17,10 +17,9 @@ use PHPUnit\Framework\TestCase;
 
 class ServerRepositoryTest extends TestCase
 {
-    /** @var ServerRepository */
-    private $servers;
+    private ServerRepository $servers;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $repository = new ServerRepository();
         $repository->add(new Server('host0'));
@@ -36,7 +35,7 @@ class ServerRepositoryTest extends TestCase
     public function test_find_all()
     {
         $servers = $this->servers->findAll();
-        $serverNames = array_values(array_map(function ($v) { return (string) $v; }, $servers));
+        $serverNames = array_values(array_map(fn($v) => (string) $v, $servers));
 
         $this->assertSame(['host0', 'host1', 'host2', 'host3', 'host4', 'host5'], $serverNames);
     }
@@ -46,7 +45,7 @@ class ServerRepositoryTest extends TestCase
     {
         $servers = $this->servers->findByRoles($roles);
         // array_values() is needed to reset the values of the keys
-        $serverNames = array_values(array_map(function ($v) { return (string) $v; }, $servers));
+        $serverNames = array_values(array_map(fn($v) => (string) $v, $servers));
 
         $this->assertSame($expectedResult, $serverNames);
     }

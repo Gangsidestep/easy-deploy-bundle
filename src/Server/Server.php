@@ -15,19 +15,17 @@ use EasyCorp\Bundle\EasyDeployBundle\Exception\ServerConfigurationException;
 use EasyCorp\Bundle\EasyDeployBundle\Helper\Str;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Server
+class Server implements \Stringable
 {
-    const ROLE_APP = 'app';
+    final public const ROLE_APP = 'app';
     private const LOCALHOST_ADDRESSES = ['localhost', 'local', '127.0.0.1'];
-    private $roles;
     private $user;
-    private $host;
+    private readonly string $host;
     private $port;
-    private $properties;
+    private readonly ParameterBag $properties;
 
-    public function __construct(string $dsn, array $roles = [self::ROLE_APP], array $properties = [])
+    public function __construct(string $dsn, private readonly array $roles = [self::ROLE_APP], array $properties = [])
     {
-        $this->roles = $roles;
         $this->properties = new ParameterBag($properties);
 
         // add the 'ssh://' scheme so the URL parsing works as expected

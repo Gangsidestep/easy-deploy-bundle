@@ -16,12 +16,11 @@ use EasyCorp\Bundle\EasyDeployBundle\Task\Task;
 
 abstract class AbstractRequirement
 {
-    /** @var Server[] */
-    private $servers;
-
-    public function __construct(array $servers)
+    /**
+     * @param Server[] $servers
+     */
+    public function __construct(private readonly array $servers)
     {
-        $this->servers = $servers;
     }
 
     public function getServers(): array

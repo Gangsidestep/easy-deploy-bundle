@@ -14,13 +14,14 @@ namespace EasyCorp\Bundle\EasyDeployBundle;
 use EasyCorp\Bundle\EasyDeployBundle\Helper\Str;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class Logger
 {
-    private $isDebug;
-    private $output;
-    private $logFilePath;
+    private readonly bool $isDebug;
+    private readonly OutputInterface $output;
+    private readonly string $logFilePath;
 
     public function __construct(Context $context)
     {

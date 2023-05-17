@@ -20,25 +20,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  * It implements the "Context Object" pattern to encapsulate the global state of
  * the deployment in an immutable object.
  */
-class Context
+class Context implements \Stringable
 {
-    private $localHost;
-    private $dryRun;
-    private $debug;
-    private $input;
-    private $output;
-    private $projectDir;
-    private $logFilePath;
+    private readonly Server $localHost;
 
-    public function __construct(InputInterface $input, OutputInterface $output, string $projectDir, string $logFilePath, bool $isDryRun, bool $isVerbose)
+    public function __construct(private readonly InputInterface $input, private readonly OutputInterface $output, private readonly string $projectDir, private readonly string $logFilePath, private readonly bool $dryRun, private readonly bool $debug)
     {
-        $this->input = $input;
-        $this->output = $output;
-        $this->projectDir = $projectDir;
-        $this->logFilePath = $logFilePath;
-        $this->dryRun = $isDryRun;
-        $this->debug = $isVerbose;
-
         $this->localHost = $this->createLocalHost();
     }
 

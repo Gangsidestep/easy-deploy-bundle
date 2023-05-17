@@ -21,15 +21,15 @@ namespace EasyCorp\Bundle\EasyDeployBundle\Server;
  */
 final class Property
 {
-    const bin_dir = 'bin_dir';
-    const config_dir = 'config_dir';
-    const console_bin = 'console_bin';
-    const cache_dir = 'cache_dir';
-    const deploy_dir = 'deploy_dir';
-    const log_dir = 'log_dir';
-    const project_dir = 'project_dir';
-    const src_dir = 'src_dir';
-    const templates_dir = 'templates_dir';
-    const use_ssh_agent_forwarding = 'use_ssh_agent_forwarding';
-    const web_dir = 'web_dir';
+    public const bin_dir = 'bin_dir';
+    public const config_dir = 'config_dir';
+    public const console_bin = 'console_bin';
+    public const cache_dir = 'cache_dir';
+    public const deploy_dir = 'deploy_dir';
+    public const log_dir = 'log_dir';
+    public const project_dir = 'project_dir';
+    public const src_dir = 'src_dir';
+    public const templates_dir = 'templates_dir';
+    public const use_ssh_agent_forwarding = 'use_ssh_agent_forwarding';
+    public const web_dir = 'web_dir';
 }

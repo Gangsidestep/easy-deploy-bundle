@@ -26,14 +26,10 @@ use EasyCorp\Bundle\EasyDeployBundle\Task\TaskRunner;
 
 abstract class AbstractDeployer
 {
-    /** @var Context */
-    private $context;
-    /** @var TaskRunner */
-    private $taskRunner;
-    /** @var Logger */
-    private $logger;
-    /** @var ConfigurationAdapter */
-    private $config;
+    private ?Context $context = null;
+    private ?TaskRunner $taskRunner = null;
+    private ?Logger $logger = null;
+    private ?ConfigurationAdapter $config = null;
 
     abstract public function getRequirements(): array;
 

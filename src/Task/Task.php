@@ -16,19 +16,15 @@ use EasyCorp\Bundle\EasyDeployBundle\Server\Server;
 class Task
 {
     /** @var Server[] $servers */
-    private $servers;
-    private $shellCommand;
-    private $envVars;
+    private readonly array $servers;
 
-    public function __construct(array $servers, string $shellCommand, array $envVars = [])
+    public function __construct(array $servers, private readonly string $shellCommand, private readonly array $envVars = [])
     {
         if (empty($servers)) {
             throw new \InvalidArgumentException('The "servers" argument of a Task cannot be an empty array. Add at least one server.');
         }
 
         $this->servers = $servers;
-        $this->shellCommand = $shellCommand;
-        $this->envVars = $envVars;
     }
 
     /**

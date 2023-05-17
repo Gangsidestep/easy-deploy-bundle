@@ -19,15 +19,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * in a consistent manner, even if the configuration of each deployer is
  * completely different and defined using incompatible objects.
  */
-final class ConfigurationAdapter
+final class ConfigurationAdapter implements \Stringable
 {
-    private $config;
-    /** @var ParameterBag */
-    private $options;
+    private ?ParameterBag $options = null;
 
-    public function __construct(AbstractConfiguration $config)
+    public function __construct(private readonly AbstractConfiguration $config)
     {
-        $this->config = $config;
     }
 
     public function __toString(): string
@@ -60,7 +57,7 @@ final class ConfigurationAdapter
             try {
                 $property->setAccessible(true);
                 $options->set($property->getName(), $property->getValue($this->config));
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 // ignore this error
             }
         }

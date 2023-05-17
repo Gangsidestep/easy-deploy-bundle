@@ -19,15 +19,8 @@ use EasyCorp\Bundle\EasyDeployBundle\Server\Server;
  */
 class TaskCompleted
 {
-    private $server;
-    private $output;
-    private $exitCode;
-
-    public function __construct(Server $server, string $output, int $exitCode)
+    public function __construct(private readonly Server $server, private readonly string $output, private readonly int $exitCode)
     {
-        $this->server = $server;
-        $this->output = $output;
-        $this->exitCode = $exitCode;
     }
 
     public function isSuccessful(): bool

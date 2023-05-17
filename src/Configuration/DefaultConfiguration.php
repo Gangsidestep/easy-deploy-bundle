@@ -24,47 +24,45 @@ use Symfony\Component\HttpKernel\Kernel;
 final class DefaultConfiguration extends AbstractConfiguration
 {
     // variables starting with an underscore are for internal use only
-    private $_symfonyEnvironmentEnvVarName; // SYMFONY_ENV or APP_ENV
+    private ?string $_symfonyEnvironmentEnvVarName = null; // SYMFONY_ENV or APP_ENV
 
     // properties are defined as private so the developer doesn't see them when using
     // their IDE autocompletion. To simplify things, the builder defines setter
     // methods named the same as each option.
-    private $symfonyEnvironment = 'prod';
-    private $keepReleases = 5;
-    private $repositoryUrl;
-    private $repositoryBranch = 'master';
-    private $remotePhpBinaryPath = 'php';
-    private $updateRemoteComposerBinary = false;
-    private $remoteComposerBinaryPath = '/usr/local/bin/composer';
-    private $composerInstallFlags = '--no-dev --prefer-dist --no-interaction --quiet';
-    private $composerOptimizeFlags = '--optimize';
-    private $installWebAssets = true;
-    private $dumpAsseticAssets = false;
-    private $warmupCache = true;
-    private $consoleBinaryPath;
-    private $localProjectDir;
-    private $binDir;
-    private $configDir;
-    private $cacheDir;
-    private $deployDir;
-    private $logDir;
-    private $srcDir;
-    private $templatesDir;
-    private $webDir;
-    private $controllersToRemove = [];
-    private $writableDirs = [];
-    private $permissionMethod = 'chmod';
-    private $permissionMode = '0777';
-    private $permissionUser;
-    private $permissionGroup;
-    private $sharedFiles = [];
-    private $sharedDirs = [];
-    private $resetOpCacheFor;
+    private string $symfonyEnvironment = 'prod';
+    private int $keepReleases = 5;
+    private ?string $repositoryUrl = null;
+    private string $repositoryBranch = 'master';
+    private string $remotePhpBinaryPath = 'php';
+    private bool $updateRemoteComposerBinary = false;
+    private string $remoteComposerBinaryPath = '/usr/local/bin/composer';
+    private string $composerInstallFlags = '--no-dev --prefer-dist --no-interaction --quiet';
+    private string $composerOptimizeFlags = '--optimize';
+    private bool $installWebAssets = true;
+    private bool $dumpAsseticAssets = false;
+    private bool $warmupCache = true;
+    private ?string $consoleBinaryPath = null;
+    private ?string $binDir = null;
+    private ?string $configDir = null;
+    private ?string $cacheDir = null;
+    private ?string $deployDir = null;
+    private ?string $logDir = null;
+    private ?string $srcDir = null;
+    private ?string $templatesDir = null;
+    private ?string $webDir = null;
+    private array $controllersToRemove = [];
+    private array $writableDirs = [];
+    private string $permissionMethod = 'chmod';
+    private string $permissionMode = '0777';
+    private ?string $permissionUser = null;
+    private ?string $permissionGroup = null;
+    private array $sharedFiles = [];
+    private array $sharedDirs = [];
+    private ?string $resetOpCacheFor = null;
 
-    public function __construct(string $localProjectDir)
+    public function __construct(private readonly string $localProjectDir)
     {
         parent::__construct();
-        $this->localProjectDir = $localProjectDir;
         $this->setDefaultConfiguration(Kernel::MAJOR_VERSION, Kernel::MINOR_VERSION);
     }
 
@@ -264,9 +262,7 @@ final class DefaultConfiguration extends AbstractConfiguration
     // the $paths can be glob() patterns, so this method needs to resolve them
     public function controllersToRemove(array $paths): self
     {
-        $absoluteGlobPaths = array_map(function ($globPath) {
-            return $this->localProjectDir.DIRECTORY_SEPARATOR.$globPath;
-        }, $paths);
+        $absoluteGlobPaths = array_map(fn($globPath) => $this->localProjectDir.DIRECTORY_SEPARATOR.$globPath, $paths);
 
         $localAbsolutePaths = [];
         foreach ($absoluteGlobPaths as $path) {
@@ -337,7 +333,7 @@ final class DefaultConfiguration extends AbstractConfiguration
         foreach ($paths as $path) {
             $this->validatePathIsRelativeToProject($path, __METHOD__);
             if (is_dir($this->localProjectDir.DIRECTORY_SEPARATOR.$path)) {
-                $this->sharedDirs[] = rtrim($path, DIRECTORY_SEPARATOR);
+                $this->sharedDirs[] = rtrim((string) $path, DIRECTORY_SEPARATOR);
             } else {
                 $this->sharedFiles[] = $path;
             }

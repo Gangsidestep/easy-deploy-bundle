@@ -19,13 +19,8 @@ use Symfony\Component\Process\Process;
 
 class TaskRunner
 {
-    private $isDryRun;
-    private $logger;
-
-    public function __construct(bool $isDryRun, Logger $logger)
+    public function __construct(private readonly bool $isDryRun, private readonly Logger $logger)
     {
-        $this->isDryRun = $isDryRun;
-        $this->logger = $logger;
     }
 
     /**
@@ -47,9 +42,14 @@ class TaskRunner
             return Process::fromShellCommandline($shellCommand);
         }
 
-        return new Process($shellCommand);
+        return new Process((array)$shellCommand);
     }
 
+    private function isWindows(): bool
+    {
+        return DIRECTORY_SEPARATOR === '\\';
+    }
+    
     private function doRun(Server $server, string $shellCommand, array $envVars): TaskCompleted
     {
         if ($server->has(Property::project_dir)) {

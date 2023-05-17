@@ -12,6 +12,7 @@
 namespace EasyCorp\Bundle\EasyDeployBundle\Requirement;
 
 use EasyCorp\Bundle\EasyDeployBundle\Task\Task;
+use Exception;
 
 class AllowsLoginViaSsh extends AbstractRequirement
 {
@@ -20,9 +21,12 @@ class AllowsLoginViaSsh extends AbstractRequirement
         return '<ok>[OK]</> The server allows to login via SSH from the local machine';
     }
 
+    /**
+     * @throws Exception
+     */
     public function getChecker(): Task
     {
-        $shellCommand = sprintf('echo %s', mt_rand());
+        $shellCommand = sprintf('echo %s', random_int(0, mt_getrandmax()));
 
         return new Task($this->getServers(), $shellCommand);
     }
