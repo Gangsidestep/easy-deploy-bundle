@@ -27,15 +27,14 @@ class CommandExists extends AbstractRequirement
 
     public function getChecker(): Task
     {
-        // todo check for other routes and/or use Key not value
-        if($this->commandName=="/usr/bin/composer")
-        {
-            $shellCommand = sprintf('%s %s', 'which', $this->commandName);
-        }
+        if(str_contains($this->commandName,"/bin/composer"))
+            {
+                $shellCommand = sprintf('%s %s', 'which', $this->commandName);
+            }
         else
-        {
-            $shellCommand = sprintf('%s %s', $this->isWindows() ? 'where' : 'which', $this->commandName);
-        }
+            {
+                $shellCommand = sprintf('%s %s', $this->isWindows() ? 'where' : 'which', $this->commandName);
+            }
 
         return new Task($this->getServers(), $shellCommand);
     }
